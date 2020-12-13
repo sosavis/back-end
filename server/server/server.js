@@ -18,7 +18,7 @@ app.use(require('./routes/usuario'))
 
 // creamos conexión con mongoDB
 //mongo funciona en el puerto 27017
-mongoose.connect('mongodb://localhost:27017/rolling', {
+mongoose.connect('mongodb://localhost:27017/my_database', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -36,5 +36,5 @@ mongoose.connect('mongodb://localhost:27017/rolling', {
 //LISTEN
 //process.env.PORT viene el que tome de config
 app.listen(process.env.PORT, () => {
-  console.log("Genial! estamos online:", process.env.PORT);
+  console.log("Genial! estamos online:", 3000);
 });
