@@ -1,6 +1,6 @@
 const express = require("express");
 
-//---encriptar contraseñas
+//--- bcrypt para encriptar contraseñas
 const bcrypt = require("bcrypt");
 //---------------------------
 
@@ -18,7 +18,7 @@ app.get("/usuario", function (req, res) {
   let limite=req.query.limite || 5
   limite=Numbre(limite)
 
-  Usuario.find({})
+  Usuario.find({estado:true})
   .skip(desde) //muestra a partir del desde" registro, los registros indicados en limit(limite)
   .limit(limite) //limita la cant de reg que muestra
 
@@ -30,7 +30,7 @@ app.get("/usuario", function (req, res) {
       });
     }
 
-    Usuario.count({},(err,conteo)=>{
+    Usuario.count({estado:true},(err,conteo)=>{
 
       if (err) {
         return res.status(400).json({
@@ -110,10 +110,40 @@ app.post("/usuario", function (req, res) {
 
   });
 
-app.delete("/usuario", function (req, res) {
+// ----------------- [método DELETE] ----------------- //
+
+app.delete("/usuario/:id", function (req, res) {
   //req (solicitud) res (respuesta)
+
+  let id=req.params.id
+
+  let estadoActualizado={
+    estado:false,
+  }
+
+  Usuario.findByIdAndUpdate(id, estadoActualizado, {new:true},(err,usuarioBorrado)=>{
+
+    if (err) {
+      return res.status(400).json ({
+        ok:false,
+        err,
+      })
+    }
+
+    if(!usuarioBorrado) {
+      return res.status(400).json ({
+        ok:false,
+        message: "usuario no encontrado",
+      })
+    }
+
+    res.json({ message: "usuario BORRADO" })
+
+  } )
+
   res.json({
-    message: "DELETE usuario",
+    ok:true,
+    usuario: usuarioBorrado,
   });
 });
 
